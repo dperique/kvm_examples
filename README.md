@@ -10,7 +10,7 @@ In this case, I create a Centos 7 VM.
 First install some packages:
 
 ```
-sudo apt-get install -y qemu-kvm libvirt-bin virtinst bridge-utils cpu-checker sshpass
+sudo apt-get install -y qemu-kvm libvirt-bin virtinst bridge-utils cpu-checker sshpass unar
 ```
 
 Create a cloud init file so you can set the password.  I set it to "Password" but you
@@ -38,10 +38,17 @@ sudo virt-install --name centos1 \
 END
 ```
 
-Download a Centos 7 image and make a qmeu image backed by your original:
+Download a Centos 7 image and make a qmeu image backed by your original.  You can chose any
+image -- I prefer the small one and then extract it.
 
 ```
 sudo wget http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-20140929_01.qcow2
+
+or get a smaller one and use `unar` to extract:
+
+sudo wget http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud.qcow2.xz
+unar CentOS-7-x86_64-GenericCloud.qcow2.xz
+
 qemu-img create -f qcow2 -b CentOS-7-x86_64-GenericCloud-20140929_01.qcow2 centos1.qcow2
 ```
 
