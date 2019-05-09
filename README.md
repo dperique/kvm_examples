@@ -79,7 +79,7 @@ ip=$(virsh domifaddr $domid|grep vnet|awk '{print $4}'|sed 's/\/24//')
 ssh into your VM using sshpass:
 
 ```
-sshpass -p Password centos@192.168.122.99 “some command"
+sshpass -p Password centos@$ip “some command"
 ```
 
 Destroy it when you're done:
