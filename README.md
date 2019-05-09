@@ -14,7 +14,7 @@ sudo apt-get install -y qemu-kvm libvirt-bin virtinst bridge-utils cpu-checker s
 ```
 
 Create a cloud init file so you can set the password.  I set it to "Password" but you
-should set it to something stronger.
+should set it to something stronger.  Then create the iso for your cloud init file.
 
 ```
 cat << END > cloud-init1.txt
@@ -24,9 +24,11 @@ chpasswd: { expire: False }
 ssh_pwauth: True
 hostname: centos1
 END
+
+cloud-localds centos1.iso cloud-init1.txt
 ```
 
-I then create a command to create the VM quietly:
+Create a command to create the VM quietly:
 
 ```
 cat << END > create_vm.sh
@@ -51,12 +53,6 @@ sudo wget http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud.q
 unar CentOS-7-x86_64-GenericCloud.qcow2.xz
 qemu-img create -f qcow2 -b CentOS-7-x86_64-GenericCloud.qcow2 centos1.qcow2
 
-```
-
-Create the iso file for your cloud init script file:
-
-```
-cloud-localds centos1.iso cloud-init1.txt
 ```
 
 Run your virt-install command to startup the VM; feel free to tweak it a bit (e.g., give it more RAM):
