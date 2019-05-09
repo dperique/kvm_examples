@@ -31,8 +31,8 @@ I then create a command to create the VM quietly:
 ```
 cat << END > create_vm.sh
 sudo virt-install --name centos1 \
-                  --disk /home/dperique/centos1.qcow2,device=disk,bus=virtio
-                  --disk /home/dperique/centos1.iso,device=cdrom
+                  --disk /home/dperique/centos1.qcow2,device=disk,bus=virtio \
+                  --disk /home/dperique/centos1.iso,device=cdrom \
                   --memory 1024 \
                   --os-type linux --os-variant centos7.0 --virt-type kvm --noautoconsole
 END
@@ -43,13 +43,14 @@ image -- I prefer the small one and then extract it.
 
 ```
 sudo wget http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-20140929_01.qcow2
+qemu-img create -f qcow2 -b CentOS-7-x86_64-GenericCloud-20140929_01.qcow2 centos1.qcow2
 
 or get a smaller one and use `unar` to extract:
 
 sudo wget http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud.qcow2.xz
 unar CentOS-7-x86_64-GenericCloud.qcow2.xz
+qemu-img create -f qcow2 -b CentOS-7-x86_64-GenericCloud.qcow2 centos1.qcow2
 
-qemu-img create -f qcow2 -b CentOS-7-x86_64-GenericCloud-20140929_01.qcow2 centos1.qcow2
 ```
 
 Create the iso file for your cloud init script file:
@@ -61,7 +62,7 @@ cloud-localds centos1.iso cloud-init1.txt
 Run your virt-install command to startup the VM; feel free to tweak it a bit (e.g., give it more RAM):
 
 ```
-sudo virt-install --name centos1 --memory 1024 --disk /home/dperique/centos1.qcow2,device=disk,bus=virtio --disk /home/dperique/centos1.iso,device=cdrom --os-type linux --os-variant centos7.0 --virt-type kvm —noautoconsole
+sudo virt-install --name centos1 --memory 1024 --disk /home/dperique/centos1.qcow2,device=disk,bus=virtio --disk /home/dperique/centos1.iso,device=cdrom --os-type linux --os-variant centos7.0 --virt-type kvm --noautoconsole
 
 or
 
@@ -71,7 +72,7 @@ source create_vm.sh
 Get the IP address of your VM from virsh:
 
 ```
-domid=$(virsh list |grep centos| awk '{print $1}’)
+domid=$(virsh list |grep centos| awk '{print $1}')
 ip=$(virsh domifaddr $domid|grep vnet|awk '{print $4}'|sed 's/\/24//')
 ```
 
