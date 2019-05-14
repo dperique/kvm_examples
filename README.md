@@ -94,6 +94,34 @@ sudo virsh destroy centos1
 sudo virsh undefine centos1
 ```
 
+## Allow root login
+
+```
+sudo apt-get install -y expect
+
+$ cat setRoot.sh
+
+#!/usr/bin/expect
+
+# Usage setRoot.sh <aHost> <aPassword>
+
+set aHost [lindex $argv 0]
+set aPass [lindex $argv 1]
+
+set timeout 60
+log_user 1
+
+spawn ssh centos@$aHost
+
+expect "password:" { send "$aPass\r" }
+expect "$ " { send "sudo su\r" }
+expect "# " { send "echo \"PermitRootLogin yes\" >> /etc/ssh/sshd_config\r" }
+expect "# " { send "service sshd restart\r" }
+
+expect "# " { send "exit\r" }
+expect "$ " { send "exit\r" }
+```
+
 ## References
 
 Installing kvm basics: https://www.cyberciti.biz/faq/installing-kvm-on-ubuntu-16-04-lts-server/
