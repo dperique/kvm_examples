@@ -80,7 +80,6 @@ Host 192.168.122.*
    UserKnownHostsFile=/dev/null
 END
 
-popd
 ./setRoot.sh $ip Password
 
 sshpass -p Password ssh root@$ip "some command as root"
