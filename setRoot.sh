@@ -12,7 +12,7 @@ set aPass [lindex $argv 1]
 set timeout 60
 log_user 1
 
-spawn ssh centos@$aHost
+spawn ssh -o "StrictHostKeyChecking no" centos@$aHost
 expect "password:" { send "$aPass\r" }
 
 # Turn on root login for ssh
