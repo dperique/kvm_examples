@@ -55,7 +55,6 @@ Host 192.168.122.*
    UserKnownHostsFile=/dev/null
 END
 
-git clone https://github.com/dperique/kvm_examples.git
 ./kvm_examples/setRoot.sh $ip Password
 
 sshpass -p Password ssh root@$ip "cat /etc/centos-release"
